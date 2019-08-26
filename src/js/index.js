@@ -8,6 +8,7 @@ const boardWidth = canvas.width;
 const boardHeight = canvas.height;
 
 const game = new Game(boardWidth, boardHeight);
+game.start();
 
 let lastTime = 0;
 

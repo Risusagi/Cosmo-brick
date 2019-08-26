@@ -9,11 +9,19 @@ export default class Ball {
         this.gameHeight = game.height;
         this.reset();
     }
+    // set ball's start position
     reset() {
-        this.x = 80;
-        this.y = 50;
-        this.speedX = 15;
-        this.speedY = 50;
+        this.x = this.countX();
+        this.y = this.game.paddle.y - this.radius;
+    }
+    // separated to allow user to change position of the paddle after live loss
+    setSpeed() {
+        this.speedX = -15;
+        this.speedY = -50;
+    }
+    // count whre is a center of the paddle
+    countX() {
+        return this.game.paddle.x + this.game.paddle.width / 2;
     }
     draw(c) {
         c.beginPath();
@@ -23,26 +31,36 @@ export default class Ball {
         c.fill();
     }
     update(deltaTime) {
-        this.x += this.speedX / deltaTime;
-        this.y += this.speedY / deltaTime;
+        if (this.game.gameState === 'running') {
+            this.x += this.speedX / deltaTime;
+            this.y += this.speedY / deltaTime;
+        }
 
         // not cross left and right borders
         if (this.x + this.radius > this.gameWidth || this.x - this.radius < 0) this.speedX = -this.speedX;
-        // not cross top and bottom borders
+        // not cross top border
         if (this.y - this.radius < 0) this.speedY = -this.speedY;
+        // if ball falls down subtract one live and change the ball's and the paddle's position to the start one 
         if (this.y - this.radius > this.gameHeight) {
             this.game.lives--;
+            this.game.gameState = 'paused';
             this.reset();
+            this.game.paddle.reset();
+            this.speedX = 0;
+            this.speedY = 0;
         } 
 
-        // touch with paddle
+        // if the ball lies on paddle change its possition respectively to the paddle's position, start-page, start after live loss
+        const ballBottom = this.y + this.radius;
+        const paddleTop = this.game.paddle.y;
+        if(ballBottom === paddleTop) {
+            this.x = this.countX();
+        }
+        
+        // if ball touches smth reverse its movement direction
         if (detectCollision(this, this.game.paddle)) {
             this.speedY = -this.speedY;
             this.y = this.game.paddle.y - this.radius;
         }
-
-        // hit brick
-        
-
     }
 }

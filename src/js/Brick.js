@@ -12,7 +12,7 @@ export default class Brick {
     update() {
         if(detectCollision(this.game.ball, this)) {
             this.game.ball.speedY = -this.game.ball.speedY;
-            this.knockedOut = true;
+            this.markForDeletion = true;
         }
     }
     draw(c) {
