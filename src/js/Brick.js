@@ -12,6 +12,13 @@ export default class Brick {
     update() {
         if(detectCollision(this.game.ball, this)) {
             this.game.ball.speedY = -this.game.ball.speedY;
+            
+            if(this.game.ball.y + this.game.ball.radius <= this.y) {
+                this.game.ball.y = this.y - this.game.ball.radius;
+            } else if(this.game.ball.y - this.game.ball.radius >= this.y) {
+                this.game.ball.y = this.y + this.height + this.game.ball.radius;
+            }
+            
             this.markForDeletion = true;
         }
     }

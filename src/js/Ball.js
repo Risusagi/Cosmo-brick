@@ -48,6 +48,10 @@ export default class Ball {
             this.game.paddle.reset();
             this.speedX = 0;
             this.speedY = 0;
+            
+            // hide falling live and prevent its falling down
+            this.game.fallingLive.x = -this.game.fallingLive.size;
+            this.game.fallingLive.speedY = 0;
         } 
 
         // if the ball lies on paddle change its possition respectively to the paddle's position, start-page, start after live loss
@@ -57,7 +61,7 @@ export default class Ball {
             this.x = this.countX();
         }
         
-        // if ball touches smth reverse its movement direction
+        // if ball touches paddle reverse its vertical movement direction
         if (detectCollision(this, this.game.paddle)) {
             this.speedY = -this.speedY;
             this.y = this.game.paddle.y - this.radius;

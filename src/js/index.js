@@ -24,3 +24,6 @@ function gameLoop(timestamp) {
 }
 
 requestAnimationFrame(gameLoop);
+
+setInterval(() => game.fallingLive.reset(), 10000);
+

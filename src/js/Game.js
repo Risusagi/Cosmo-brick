@@ -3,6 +3,7 @@ import InputHandler from './InputHandler.js';
 import Ball from './Ball.js';
 import Brick from './Brick.js';
 import Live from './Live.js';
+import FallingLive from './FallingLive.js';
 
 export default class Game {
     constructor(boardWidth, boardHeight) {
@@ -13,6 +14,7 @@ export default class Game {
         this.ball = new Ball(this);
         this.gameObjects = [];
         this.lives = 3;
+        this.fallingLive = new FallingLive(this);
         new InputHandler(this.paddle, this);
         
     }
@@ -23,13 +25,14 @@ export default class Game {
             bricks.push(new Brick(this, 8 + 56 * i, 80))
         }
 
-        const hearts = document.querySelectorAll('img');
+        const heart = document.querySelector('.live');
         const lives = [];
         for(let i = 0; i < 3; i++) {
             const x = this.width - 50 * (i + 1);
-            lives.push(new Live(hearts[i], x, i, this));
+            lives.push(new Live(heart, x, i, this));
         }
 
+        
         this.gameObjects = [
             this.paddle,
             this.ball,
@@ -47,9 +50,15 @@ export default class Game {
         ) return;
         this.gameObjects.forEach(obj => obj.update(deltaTime));
         this.gameObjects = this.gameObjects.filter(obj => !obj.markForDeletion);
+        if (this.gameState === 'running') {
+            this.fallingLive.update(deltaTime);
+        }
     }
     draw(c) {
         this.gameObjects.forEach(obj => obj.draw(c));
+        if (this.gameState === 'running') {
+            this.fallingLive.draw(c);
+        }
 
         if (this.gameState === 'paused') {
             c.rect(0, 0, this.width, this.height);
@@ -83,6 +92,5 @@ export default class Game {
         } else {
             this.gameState = 'paused';
         }
-        console.log(this.gameState);
     }
 }

@@ -9,6 +9,8 @@ export default class InputHandler {
             } else if (key === 32 && game.gameState !== 'start-page') {
                 game.togglePause();
             } else if (key === 13) {
+                if (game.gameState === 'running') return;
+                
                 game.gameState = 'running';
                 game.ball.setSpeed();
             }
