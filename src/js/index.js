@@ -19,6 +19,7 @@ function gameLoop(timestamp) {
     c.clearRect(0, 0, boardWidth, boardHeight);
     game.update(deltaTime);
     game.draw(c);
+    
 
     requestAnimationFrame(gameLoop);
 }
@@ -27,3 +28,7 @@ requestAnimationFrame(gameLoop);
 
 setInterval(() => game.fallingLive.reset(), 10000);
 
+setInterval(() => {
+    game.addition.reset();
+    game.addition.change();
+}, 7000);
