@@ -12,6 +12,7 @@ export default class InputHandler {
                 if (game.gameState === 'running') return;
                 
                 game.gameState = 'running';
+                game.ball.getSpeed();
                 game.ball.setSpeed();
             }
         });

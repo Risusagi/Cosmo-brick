@@ -7,18 +7,17 @@ export default class Brick {
         this.x = x;
         this.y = y;
         this.game = game;
-
     }
     update() {
         if(detectCollision(this.game.ball, this)) {
-            this.game.ball.speedY = -this.game.ball.speedY;
-            
-            if(this.game.ball.y + this.game.ball.radius <= this.y) {
-                this.game.ball.y = this.y - this.game.ball.radius;
-            } else if(this.game.ball.y - this.game.ball.radius >= this.y) {
+            if (this.game.ball.speedY < 0) {
                 this.game.ball.y = this.y + this.height + this.game.ball.radius;
+            } else if (this.game.ball.speedY > 0) {
+                this.game.ball.y = this.y - this.game.ball.radius;
             }
-            
+
+            this.game.ball.speedY = -this.game.ball.speedY;
+
             this.markForDeletion = true;
         }
     }

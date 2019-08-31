@@ -8,7 +8,7 @@ export default class FallingLive {
         this.game = game;
     }
     reset() {
-        this.x = Math.floor(Math.random() * (this.game.width - 60)) + 30;
+        this.x = Math.floor(Math.random() * (this.game.width - 2 * this.size)) + this.size;
         this.y = 100;
         this.speedY = 15;
     }
@@ -23,7 +23,7 @@ export default class FallingLive {
         const paddleLeftSide = this.game.paddle.x;
         const paddleRightSide = paddleLeftSide + this.game.paddle.width;
 
-        // increase amount of lives if paddle caught flling live and amount of lives is less than 3
+        // increase amount of lives if paddle caught falling live and amount of lives is less than 3
         if (
             liveBottom >= paddleTop &&
             this.x >= paddleLeftSide &&
@@ -34,5 +34,9 @@ export default class FallingLive {
             }
             this.x = -this.size;
         }
+    }
+    stop() {
+        this.x = -this.size;
+        this.speedY = 0;
     }
 }

@@ -50,15 +50,21 @@ export default class Game {
             this.gameState === 'paused' ||
             this.gameState === 'game-over'
         ) return;
+        // for start page and running
         this.gameObjects.forEach(obj => obj.update(deltaTime));
         this.gameObjects = this.gameObjects.filter(obj => !obj.markForDeletion);
+
+        // only for running
         if (this.gameState === 'running') {
             this.fallingLive.update(deltaTime);
             this.addition.update(deltaTime);
         }
+
+        
     }
     draw(c) {
         this.gameObjects.forEach(obj => obj.draw(c));
+
         if (this.gameState === 'running') {
             this.fallingLive.draw(c);
             this.addition.draw(c);

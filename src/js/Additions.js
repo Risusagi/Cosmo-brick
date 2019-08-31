@@ -1,58 +1,63 @@
 export default class Additions {
     constructor(game) {
         this.kinds = ['snow', 'fire', 'shrink', 'expand'];
-        this.x = 50;
-        this.y = 50;
-        this.size = 50;
         this.speedY = 10;
         this.game = game;
     }
     draw(c) {
-        c.drawImage(this.img, this.x, this.y, this.size, this.size);
+        c.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
     reset() {
-        Math.floor(Math.random() * (this.game.width - 60)) + 30;
+        this.x = Math.floor(Math.random() * (this.game.width - 2 * this.width)) + this.width;
         this.y = 100;
         this.speedY = 15;
+    }
+    stop() {
+        this.x = -this.width;
+        this.speedY = 0;
     }
     update(deltaTime) {
         this.y += this.speedY / deltaTime;
 
-        const addBottom = this.y + this.size;
+        const addBottom = this.y + this.height;
         const paddleTop = this.game.paddle.y;
+        const paddleBottom = paddleTop + this.game.paddle.height;
         const paddleLeftSide = this.game.paddle.x;
         const paddleRightSide = paddleLeftSide + this.game.paddle.width;
 
-        // increase amount of lives if paddle caught flling live and amount of lives is less than 3
         if (
-            addBottom >= paddleTop &&
-            this.x >= paddleLeftSide &&
-            this.x + this.size <= paddleRightSide
+            (addBottom >= paddleTop &&
+            addBottom <= paddleBottom) ||
+            (this.y >= paddleTop &&
+            this.y <= paddleBottom)
         ) {
-            switch(this.type) {
-                case 'snow':
-                    this.game.ball.speedX *= 0.9;
-                    this.game.ball.speedY *= 0.9;
-                    // this.game.ball.setSpeed()
-                    break;
-                case 'fire':
-                    this.game.ball.speedX *= 1.1;
-                    this.game.ball.speedY *= 1.1;
-                    break;
-                case 'shrink':
-                    this.game.paddle.width -= 10;
-                    break;
-                case 'expand':
-                    this.game.paddle.width += 10;
-                    break;
+            if(
+                this.x >= paddleLeftSide &&
+                this.x + this.width <= paddleRightSide
+            ) {
+                switch (this.type) {
+                    case 'snow':
+                        this.game.ball.decreaseSpeed();
+                        break;
+                    case 'fire':
+                        this.game.ball.increaseSpeed();
+                        break;
+                    case 'shrink':
+                        this.game.paddle.shrink();
+                        break;
+                    case 'expand':
+                        this.game.paddle.expand();
+                        break;
+                }
+                // hide addition
+                this.x = -this.width;
             }
         }
     }
     change() {
         const index = Math.floor(Math.random() * 4);
         this.type = this.kinds[index];
-        // this.sp
-
+        const size = 40;
         switch (this.type) {
             case 'snow':
                 this.img = document.querySelector('.snow');
@@ -67,9 +72,18 @@ export default class Additions {
                 this.img = document.querySelector('.expand');
                 break;
         }
+        switch(this.type) {
+            case 'snow':
+            case 'fire':
+                this.height = size;
+                this.width = size;
+                break;
+            case 'shrink':
+            case 'expand':
+                this.height = 30;
+                this.width = 60;
+            break;
+        }
     }
+
 }
-// TO DO
-// MAX AND MIN WIDTH
-// TIME LIMIT FOR SPEED CHANGE
-// increse
