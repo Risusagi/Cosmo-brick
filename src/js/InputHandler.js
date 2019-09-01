@@ -12,7 +12,7 @@ export default class InputHandler {
             } else if (key === 13) {
                 // if ball is lying on the paddle set its speed (pause after a live loss)
                 if(game.ball.y + game.ball.size === paddle.y) {
-                    game.ball.setSpeed();
+                    game.ball.setSpeed(game.level);
                 }
 
                 if (game.gameState === 'running') {

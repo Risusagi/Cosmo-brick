@@ -16,14 +16,16 @@ export default class Game {
         this.gameObjects = [];
         this.lives = 3;
         this.points = 0;
+        this.level = 0;
+        this.hitter = 0;
         this.fallingLive = new FallingLive(this);
         this.addition = new Additions(this);
         new InputHandler(this.paddle, this);
     }
 
     start() {
-        const bricks = buildLevel(this, levels[1]);
-
+        
+        this.bricks = buildLevel(this, levels[this.level % 7]);
         const heart = document.querySelector('.live');
         const lives = [];
         for(let i = 0; i < 3; i++) {
@@ -36,7 +38,6 @@ export default class Game {
         this.gameObjects = [
             this.paddle,
             this.ball,
-            ...bricks,
             ...lives
         ];
     }
@@ -49,8 +50,15 @@ export default class Game {
             this.gameState === 'game-over'
         ) return;
         // for start page and running
-        this.gameObjects.forEach(obj => obj.update(deltaTime));
-        this.gameObjects = this.gameObjects.filter(obj => !obj.markForDeletion);
+        [...this.gameObjects, ...this.bricks].forEach(obj => obj.update(deltaTime));
+
+        // if ball hitted more than one brick at ones, reverse its vertical movement, because otherwise it will fly in the wrong direction (minus minus gives plus so we need one more minus)
+        if(this.hitted > 1) {
+            this.ball.speedY = -this.ball.speedY;
+        }
+        this.hitted = 0;
+
+        this.bricks = this.bricks.filter(brick => !brick.markForDeletion);
 
         // only for running
         if (this.gameState === 'running' && this.ball.speedY !== 0) {
@@ -58,10 +66,15 @@ export default class Game {
             this.addition.update(deltaTime);
         }
         
-        
+        if(this.bricks.length === 0) {
+            this.ball.reset();
+            this.ball.stop();
+            this.level++;
+            this.bricks = buildLevel(this, levels[this.level % 7]);
+        }
     }
     draw(c) {
-        this.gameObjects.forEach(obj => obj.draw(c));
+        [...this.gameObjects, ...this.bricks].forEach(obj => obj.draw(c));
 
         this.updatePoints(c);
         
@@ -75,9 +88,11 @@ export default class Game {
         c.textAlign = "center";
 
         if (this.gameState === 'game-over') {
-            this.coverScreen("rgba(0, 0, 0, 0.8)", c);
+            this.coverScreen("rgba(0, 0, 0, 0.6)", c);
 
             this.writeText("GAME OVER", c);
+            c.font = c.font = "16px Roboto Mono";
+            c.fillText(`Earned points: ${this.points}`, this.width / 2, this.height / 2 + 10);
 
         } else if (this.gameState === 'start-page') {
             this.coverScreen("rgba(0, 0, 0, 0.3)", c);
@@ -90,6 +105,16 @@ export default class Game {
             this.writeText("Press spacebar to continue", c);
         }
     }
+
+    writeText(text, c) {
+        c.fillStyle = 'white';
+        c.fillText(text, this.width / 2, this.height / 2 - 30);
+    }
+    coverScreen(color, c) {
+        c.fillStyle = color;
+        c.fillRect(0, 0, this.width, this.height);
+    }
+
     togglePause() {
         if (this.gameState === 'paused') {
             this.gameState = 'running';
@@ -106,12 +131,12 @@ export default class Game {
     }
 
     startDropping() {
-        setInterval(() => this.fallingLive.reset(), 10000);
+        setInterval(() => this.fallingLive.reset(), 90000);
 
         setInterval(() => {
             this.addition.change();
             this.addition.reset();
-        }, 10000);
+        }, 40000);
     }
     handleLiveLoss() {
         this.lives--;
@@ -126,13 +151,5 @@ export default class Game {
         // hide falling live, addition and prevent their falling down
         this.fallingLive.stop();
         this.addition.stop();
-    }
-    writeText(text, c) {
-        c.fillStyle = 'white';
-        c.fillText(text, this.width / 2, this.height / 2);
-    }
-    coverScreen(color, c) {
-        c.fillStyle = color;
-        c.fillRect(0, 0, this.width, this.height);
     }
 }

@@ -17,14 +17,14 @@ export default class Ball {
         this.y = this.game.paddle.y - this.size;
     }
     // separated to allow user to change position of the paddle after live loss
-    setSpeed() {
+    setSpeed(coefficient) {
         // if previous speeds exist use them otherwise use default values
         if (this.previousSpeedX) {
             this.speedX = this.previousSpeedX;
             this.speedY = this.previousSpeedY;
         } else {
-            this.speedX = -15;
-            this.speedY = -50;
+            this.speedX = -20 * (1 + coefficient / 10);
+            this.speedY = -65 * (1 + coefficient / 10);
         }
     }
     // count whre is a center of the paddle
@@ -82,18 +82,14 @@ export default class Ball {
             this.speedY *= this.timeChange;
 
             this.finishTime = Date.now() + 5000;
-            
-            // this.cancelChange(timeChange);
         }
     }
     increaseSpeed() {
         this.timeChange = 1.4;
-        if (Math.abs(this.speedY) <= 85) {
-            this.speedX *= this.timeChange;
-            this.speedY *= this.timeChange;
+        this.speedX *= this.timeChange;
+        this.speedY *= this.timeChange;
 
-            this.finishTime = Date.now() + 5000;
-        }
+        this.finishTime = Date.now() + 5000;
     }
     // cancel change of speed
     cancelChange() {

@@ -4,18 +4,22 @@ import Brick from './Brick.js';
 
 export function buildLevel(game, level) {
     const bricks = [];
-
+    
     level.forEach((row, rowIndex) => {
         row.forEach((brickStrength, brickIndex) => {
             if(brickStrength != 0) {
                 const x = 22 + brickIndex * 80;
                 const y = 100 + rowIndex * 40;
-                bricks.push(new Brick(game, x, y, brickStrength));
+                bricks.push(new Brick(game, x, y, brickStrength + incrementValue()));
             }
         })
     })
 
     return bricks;
+}
+
+function incrementValue() {
+    return Math.floor(Math.random() * 5);
 }
 
 export const levels = [

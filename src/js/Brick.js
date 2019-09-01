@@ -11,6 +11,7 @@ export default class Brick {
     }
     update() {
         if(detectCollision(this.game.ball, this)) {
+            this.game.hitted++;
             this.game.ball.speedY = -this.game.ball.speedY;
             this.game.points += 1;
 
