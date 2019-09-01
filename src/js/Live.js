@@ -2,7 +2,7 @@ export default class Live {
     constructor(img, x, i, game) {
         this.img = img;
         this.x = x;
-        this.y = 0;
+        this.y = 5;
         this.size = 50;
         this.game = game;
         this.index = i;

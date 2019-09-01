@@ -1,7 +1,7 @@
 export default class FallingLive {
     constructor(game) {
         this.img = document.querySelector('.live');
-        this.size = 30;
+        this.size = 38;
         this.x = -this.size;
         this.y = 100;
         this.speedY = 0;
@@ -10,7 +10,7 @@ export default class FallingLive {
     reset() {
         this.x = Math.floor(Math.random() * (this.game.width - 2 * this.size)) + this.size;
         this.y = 100;
-        this.speedY = 15;
+        this.speedY = 10;
     }
     draw(c) { 
         c.drawImage(this.img, this.x, this.y, this.size, this.size);

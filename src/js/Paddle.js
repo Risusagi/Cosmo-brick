@@ -1,7 +1,7 @@
 export default class Paddle {
     constructor(game) {
-        this.width = 150;
-        this.height = 30;
+        this.width = 200;
+        this.height = 18;
         this.y = game.height - this.height;
         this.maxSpeed = 40;
         this.speed = 0;
@@ -11,8 +11,10 @@ export default class Paddle {
     }
 
     draw(c) {
-        c.fillStyle = "black";
+        c.fillStyle = "#ddd";
         c.fillRect(this.x, this.y, this.width, this.height);
+        c.fillStyle = 'black';
+        c.fillRect(this.x + 10, this.y + 5, this.width - 20, this.height - 10);
     }
     reset() {
         this.x = this.game.width / 2 - this.width / 2;
@@ -33,15 +35,15 @@ export default class Paddle {
     }
 
     shrink() {
-        if (this.width >= 75) {
-            this.width -= 10;
-            this.x += 5;
+        if (this.width > 110) {
+            this.width -= 30;
+            this.x += 10;
         }
     }
     expand() {
-        if (this.width <= this.game.width / 4) {
-            this.width += 10;
-            this.x -= 5;
+        if (this.width < 350) {
+            this.width += 30;
+            this.x -= 10;
         }
     }
 }

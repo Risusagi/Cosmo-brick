@@ -17,6 +17,14 @@ function gameLoop(timestamp) {
     lastTime = timestamp;
 
     c.clearRect(0, 0, boardWidth, boardHeight);
+    
+    
+
+    c.drawImage(document.querySelector('.background'), 0, 0, game.width, game.height);
+
+    c.fillStyle = "rgba(0, 0, 0, .3)";
+    c.fillRect(0, 0, game.width, game.height);
+    
     game.update(deltaTime);
     game.draw(c);
     
@@ -24,10 +32,3 @@ function gameLoop(timestamp) {
 }
 
 requestAnimationFrame(gameLoop);
-
-setInterval(() => game.fallingLive.reset(), 10000);
-
-setInterval(() => {
-    game.addition.change();
-    game.addition.reset();
-}, 7000);
