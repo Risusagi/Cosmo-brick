@@ -27,6 +27,8 @@ function gameLoop(timestamp) {
     
     game.update(deltaTime);
     game.draw(c);
+
+    game.ball.controlSpeedChange(deltaTime);
     
     requestAnimationFrame(gameLoop);
 }

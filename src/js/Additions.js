@@ -1,7 +1,6 @@
 export default class Additions {
     constructor(game) {
         this.kinds = ['snow', 'fire', 'shrink', 'expand'];
-        this.speedY = 30;
         this.game = game;
     }
     draw(c) {
@@ -51,7 +50,8 @@ export default class Additions {
     }
     change() {
         const index = Math.floor(Math.random() * 4);
-        this.type = this.kinds[index];
+        // this.type = this.kinds[index];
+        this.type = 'snow';
         const size = 34;
         switch (this.type) {
             case 'snow':

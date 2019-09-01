@@ -1,11 +1,9 @@
 import Paddle from './Paddle.js'
 import InputHandler from './InputHandler.js';
 import Ball from './Ball.js';
-import Brick from './Brick.js';
 import Live from './Live.js';
 import FallingLive from './FallingLive.js';
 import Additions from './Additions.js';
-
 import {buildLevel, levels} from './levels.js';
 
 export default class Game {
@@ -59,7 +57,7 @@ export default class Game {
             this.fallingLive.update(deltaTime);
             this.addition.update(deltaTime);
         }
-
+        
         
     }
     draw(c) {
@@ -75,27 +73,21 @@ export default class Game {
 
         c.font = "30px Roboto Mono";
         c.textAlign = "center";
-        
-        if (this.gameState === 'paused') {
-            c.fillStyle = "rgba(0, 0, 0, 0.5)";
-            c.fillRect(0, 0, this.width, this.height);
-            
-            c.fillStyle = 'white';
-            c.fillText("Press spacebar to continue", this.width / 2, this.height / 2);
+
+        if (this.gameState === 'game-over') {
+            this.coverScreen("rgba(0, 0, 0, 0.8)", c);
+
+            this.writeText("GAME OVER", c);
 
         } else if (this.gameState === 'start-page') {
-            c.fillStyle = "rgba(0, 0, 0, 0.3)";
-            c.fillRect(0, 0, this.width, this.height);
+            this.coverScreen("rgba(0, 0, 0, 0.3)", c);
 
-            c.fillStyle = 'white';
-            c.fillText("Press Enter to start a game", this.width / 2, this.height / 2);
+            this.writeText("Press Enter to start a game", c);
 
-        } else if (this.gameState === 'game-over') {
-            c.fillStyle = "rgba(0, 0, 0, 0.8)";
-            c.fillRect(0, 0, this.width, this.height);
-            
-            c.fillStyle = 'white';
-            c.fillText("GAME OVER", this.width / 2, this.height / 2);
+        } else if (this.gameState === 'paused') {
+            this.coverScreen("rgba(0, 0, 0, 0.5)", c);
+
+            this.writeText("Press spacebar to continue", c);
         }
     }
     togglePause() {
@@ -119,11 +111,12 @@ export default class Game {
         setInterval(() => {
             this.addition.change();
             this.addition.reset();
-        }, 1000);
+        }, 10000);
     }
     handleLiveLoss() {
         this.lives--;
-        this.gameState = 'paused';
+
+        if(this.lives > 0) this.gameState = 'paused';
 
         this.paddle.reset();
 
@@ -133,5 +126,13 @@ export default class Game {
         // hide falling live, addition and prevent their falling down
         this.fallingLive.stop();
         this.addition.stop();
+    }
+    writeText(text, c) {
+        c.fillStyle = 'white';
+        c.fillText(text, this.width / 2, this.height / 2);
+    }
+    coverScreen(color, c) {
+        c.fillStyle = color;
+        c.fillRect(0, 0, this.width, this.height);
     }
 }

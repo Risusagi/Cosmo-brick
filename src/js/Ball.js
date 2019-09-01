@@ -68,38 +68,55 @@ export default class Ball {
             this.speedY = -this.speedY;
             this.y = this.game.paddle.y - this.size;
         }
+
+        
+        
     }
     // END OF UPDATE METHOD
 
     decreaseSpeed() {
-        const timeChange = 0.6;
+        this.timeChange = 0.6;
 
         if(Math.abs(this.speedY) >= 25) {
-            this.speedX *= timeChange;
-            this.speedY *= timeChange;
+            this.speedX *= this.timeChange;
+            this.speedY *= this.timeChange;
+
+            this.finishTime = Date.now() + 5000;
             
-            this.cancelChange(timeChange);
+            // this.cancelChange(timeChange);
         }
     }
     increaseSpeed() {
-        const timeChange = 1.4;
+        this.timeChange = 1.4;
         if (Math.abs(this.speedY) <= 85) {
-            this.speedX *= timeChange;
-            this.speedY *= timeChange;
+            this.speedX *= this.timeChange;
+            this.speedY *= this.timeChange;
 
-            this.cancelChange(timeChange);
+            this.finishTime = Date.now() + 5000;
         }
     }
     // cancel change of speed
-    cancelChange(timeChange) {
-        setTimeout(() => {
-            this.speedY /= timeChange;
-            this.speedX /= timeChange;
-        }, 5000);
+    cancelChange() {
+        this.speedY /= this.timeChange || 1;
+        this.speedX /= this.timeChange || 1;
     }
 
     getSpeed() {
         this.previousSpeedX = this.speedX;
         this.previousSpeedY = this.speedY;
+    }
+
+    controlSpeedChange(deltaTime) {
+        // delay time when a speed change would be canceled if the game was paused
+        if (this.game.gameState === 'paused') {
+            this.finishTime = this.finishTime || 0;
+            this.finishTime += deltaTime;
+        }
+        
+        if (this.finishTime <= Date.now()) {
+            this.cancelChange();
+            delete this.timeChange;
+            delete this.finishTime;
+        }
     }
 }
