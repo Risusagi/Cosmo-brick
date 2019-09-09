@@ -16,7 +16,7 @@ export default class Game {
         this.gameObjects = [];
         this.lives = 3;
         this.points = 0;
-        this.level = 0;
+        this.level = 4;
         this.hitter = 0;
         this.fallingLive = new FallingLive(this);
         this.addition = new Additions(this);
@@ -25,7 +25,7 @@ export default class Game {
 
     start() {
         
-        this.bricks = buildLevel(this, levels[this.level % 7]);
+        this.bricks = buildLevel(this, levels[this.level % 6]);
         const heart = document.querySelector('.live');
         const lives = [];
         for(let i = 0; i < 3; i++) {
@@ -70,7 +70,7 @@ export default class Game {
             this.ball.reset();
             this.ball.stop();
             this.level++;
-            this.bricks = buildLevel(this, levels[this.level % 7]);
+            this.bricks = buildLevel(this, levels[this.level % 6]);
         }
     }
     draw(c) {
@@ -131,11 +131,17 @@ export default class Game {
     }
 
     startDropping() {
-        setInterval(() => this.fallingLive.reset(), 90000);
+        setInterval(() =>{
+            if(this.fallingLive.speedY === 0) {
+                this.fallingLive.reset()
+            }
+        }, 90000);
 
         setInterval(() => {
-            this.addition.change();
-            this.addition.reset();
+            if(this.addition.speedY === 0) {
+                this.addition.change();
+                this.addition.reset();
+            }
         }, 40000);
     }
     handleLiveLoss() {

@@ -2,12 +2,13 @@ export default class Additions {
     constructor(game) {
         this.kinds = ['snow', 'fire', 'shrink', 'expand'];
         this.game = game;
+        this.speedY = 0;
     }
     draw(c) {
         c.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
     reset() {
-        this.x = Math.floor(Math.random() * (this.game.width - 2 * this.width)) + this.width;
+        this.x = Math.floor(Math.random() * (this.game.width - 150)) + 75;
         this.y = 100;
         this.speedY = 10;
     }
@@ -50,8 +51,8 @@ export default class Additions {
     }
     change() {
         const index = Math.floor(Math.random() * 4);
-        // this.type = this.kinds[index];
-        this.type = 'snow';
+        this.type = this.kinds[index];
+        
         const size = 34;
         switch (this.type) {
             case 'snow':
