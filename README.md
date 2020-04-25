@@ -25,7 +25,7 @@ Before starting a game and after live loss user can set a paddle's possition to 
 ## Technologies
 * JavaScript
 * HTML
-* CSS
+* SASS
 * Webpack 4
 
 ## Status
